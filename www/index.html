@@ -1,55 +1,51 @@
 <!DOCTYPE html>
 
-<html lang="en" data-ng-app="App">
-  <head>
-    <meta charset="UTF-8">
-    <title>Freshly Pressed</title>
-
-    <!-- Ionic Libs -->
-    <link rel="stylesheet" href="lib/ionic/css/ionic.css">
-    <script src="lib/ionic/js/ionic.bundle.js"> </script>
-
-    <script src="cordova.js"></script>
-
-    <!--My App-->
-    <link rel ="stylesheet" href="css/style.css">
-    <script src="js/app.js"></script>
-
-  </head>
-
-  <body data-ng-controller="AppCtrl">
-    <ion-header-bar class="bar-balanced">
-      <h1 class="title"> Freshly Pressed!</h1>
-      <button class="button" data-ng-click="refresh()">
-        <i class="icon ion-refresh"></i>
-      </button>
+<html lang="en" ng-app="FPApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Freshly Pressed</title>
 
 
-    </ion-header-bar>
 
-    <ion-content>
-      <ion-refresher on-refresh="refresh()"></ion-refresher>
-      <div data-ng-show="!posts.length">
-        <br><br>
-        <h1>Pull to Refresh</h1>
-      </div>
+  <!-- Ionic/Cordova Libs -->
+  <link rel="stylesheet" href="lib/ionic/css/ionic.css">
+  <script src="lib/ionic/js/ionic.bundle.js"> </script>
+  <meta http-equiv="Content-Security-Policy" content="default-src *;">
+  <script src="cordova.js"></script>
 
+  <!--My App-->
+  <link rel ="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
 
-      <div class="card list" data-ng-repeat="p in posts">
-        <div class="item item-avatar-left">
-          <img data-ng-src="{{p.author.avatar_URL}}" alt=""><img>
-          <h2>{{p.author.nice_name}}</h2>
-          <p><a href="{{p.author.URL}}">{{p.author.URL}}</a></p>
-        </div>
+</head>
 
-        <div class="item item-body">
-          <h1>{{p.title}}</h1>
-          <div data-ng-bind-html="p.content"></div>
-        </div>
-      </div>
+<body ng-controller="FPCtrl">
+<ion-pane>
+  <ion-header-bar class="bar-dark">
+    <h1 class="title"> Freshly Pressed! ({{blogs.length}} blogs pulled)</h1>
+    <button class="button" data-ng-click="refresh()">
+      <i class="icon ion-refresh"></i>
+    </button>
+  </ion-header-bar>
 
+  <ion-content>
+    <ion-refresher pulling-text="Reload Blogs" on-refresh="reload()"></ion-refresher>
+    <ion-list>
+      <ion-item ng-repeat="b in blogs" ng-click="show($index)">
+        <img ng-src="{{b.avatar_URL}}" class="thumbnail">
+        <h2 ng-bind-html="b.title"></h2>
+        <p>{{b.name}}</p>
+        <ion-option-button class="button-energized" ng-click="share($index)">
+          Share
+        </ion-option-button>
 
-    </ion-content>
-  </body>
+      </ion-item>
+    </ion-list>
+
+    <ion-infinite-scroll on-infinite="loadMore()"></ion-infinite-scroll>
+
+  </ion-content>
+</ion-pane>
+</body>
 </html>
 
